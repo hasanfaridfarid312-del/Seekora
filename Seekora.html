@@ -1,0 +1,501 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Seekora</title>
+  <meta name="description" content="Seekora — Crowd Found & Lost Platform (single HTML file, no JavaScript).">
+  <style>
+    
+    :root{
+      --primary:#2563eb;
+      --accent:#7c3aed;
+      --muted:#6b7280;
+      --bg:#f6f7fb;
+      --card:#ffffff;
+      --radius:12px;
+      --shadow: 0 6px 20px rgba(15,23,36,0.06);
+      --max-width:1100px;
+      --container-padding:22px;
+      --glass: rgba(255,255,255,0.8);
+    }
+
+    
+    *{box-sizing:border-box;margin:0;padding:0}
+    html,body{height:100%}
+    body{
+      font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      background: linear-gradient(180deg,#f6f7fb 0%, #ffffff 100%);
+      color:#0f1724;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      line-height:1.5;
+      padding:28px 14px;
+    }
+
+    
+    input[type="radio"].panel-toggle { display:none; }
+
+    
+    .wrap {
+      width: min(var(--max-width), 96%);
+      margin: 10px auto;
+      background: linear-gradient(180deg, rgba(255,255,255,0.85), rgba(255,255,255,0.95));
+      border-radius:18px;
+      box-shadow: var(--shadow);
+      border:1px solid rgba(15,23,36,0.04);
+      overflow: hidden;
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      min-height: 78vh;
+    }
+
+    
+    @media (max-width:900px){
+      .wrap { grid-template-columns: 1fr; }
+      .side { order: 2; }
+      .panels { order: 1; }
+    }
+
+    
+    .side {
+      background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(250,250,255,0.98));
+      padding: var(--container-padding);
+      border-right:1px solid rgba(15,23,36,0.03);
+      min-height: 100%;
+    }
+
+    .brand {
+      display:flex; gap:12px; align-items:center; margin-bottom:14px;
+    }
+    .logo {
+      width:52px; height:52px; border-radius:10px;
+      background: linear-gradient(135deg,var(--primary),var(--accent));
+      display:inline-block;
+      box-shadow:0 6px 18px rgba(124,58,237,0.12), inset 0 -6px 10px rgba(0,0,0,0.04);
+    }
+    .brand h1 { font-size:18px; color:var(--primary); }
+    .brand p { font-size:12px; color:var(--muted); margin-top:2px; }
+
+    .side .intro {
+      margin: 12px 0 18px;
+      font-size:13px;
+      color:var(--muted);
+    }
+
+    
+    .nav {
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      margin-bottom:18px;
+    }
+
+    .nav label {
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      padding:10px 12px;
+      border-radius:10px;
+      background: transparent;
+      color: #0f1724;
+      text-decoration:none;
+      cursor:pointer;
+      font-weight:600;
+      border:1px solid transparent;
+      transition: all .12s ease;
+    }
+
+    .nav label:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 22px rgba(37,99,235,0.06);
+    }
+
+   
+    .nav label .hot {
+      display:inline-block; font-size:13px; color:var(--muted);
+    }
+
+    
+    .panels {
+      padding: var(--container-padding);
+    }
+
+    
+    .panel {
+      display: none;
+      animation: fade .18s ease;
+    }
+    @keyframes fade { from {opacity:0; transform: translateY(4px)} to {opacity:1; transform: translateY(0)} }
+
+    
+    .card {
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 20px;
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(15,23,36,0.03);
+      max-width: 100%;
+    }
+
+    .muted { color:var(--muted); font-size:13px; }
+    h2 { margin-bottom:10px; color:#0f1724; }
+    p.lead { margin-bottom:12px; color:var(--muted) }
+
+  
+    .form { display:flex; flex-direction:column; gap:12px; margin-top:6px; }
+    .form label { display:flex; flex-direction:column; font-size:14px; color:#0f1724; }
+    .form input[type="text"],
+    .form input[type="email"],
+    .form input[type="password"],
+    .form input[type="date"],
+    .form textarea,
+    .form select {
+      padding:10px 12px;
+      margin-top:8px;
+      border-radius:8px;
+      border:1px solid rgba(15,23,36,0.08);
+      background: white;
+      outline: none;
+      font-size:14px;
+    }
+    textarea { min-height:100px; resize:vertical; }
+
+    .actions { display:flex; gap:10px; margin-top:8px; flex-wrap:wrap; }
+    .btn {
+      display:inline-block;
+      background:var(--primary);
+      color:white;
+      padding:10px 14px;
+      border-radius:10px;
+      text-decoration:none;
+      font-weight:600;
+      border: none;
+      cursor: pointer;
+      transition: transform .12s ease, box-shadow .12s ease;
+    }
+    .btn.secondary {
+      background: transparent;
+      color: var(--primary);
+      border: 1px solid rgba(37,99,235,0.12);
+    }
+    .btn.ghost { background:transparent; color:var(--muted); border:1px dashed rgba(15,23,36,0.06); }
+
+
+    .two-col { display:grid; grid-template-columns: 1fr 1fr; gap:16px; }
+    @media (max-width:700px){ .two-col { grid-template-columns: 1fr; } }
+
+
+    .side footer { margin-top:18px; font-size:12px; color:var(--muted); }
+
+
+    .landing-hero {
+      display:flex; gap:18px; align-items:center;
+    }
+    .hero-text { flex:1; }
+    .hero-text h1 { font-size:22px; margin-bottom:6px; }
+    .hero-text p { color:var(--muted); margin-bottom:10px; }
+    .hero-actions { display:flex; gap:10px; flex-wrap:wrap; }
+
+    
+    .results { margin-top:12px; color:var(--muted); font-size:14px; }
+
+    
+    .small { font-size:13px; color:var(--muted) }
+
+    #panel-landing:checked ~ .wrap .panels .landing { display:block; }
+    #panel-home:checked    ~ .wrap .panels .home { display:block; }
+    #panel-found:checked   ~ .wrap .panels .found { display:block; }
+    #panel-lost:checked    ~ .wrap .panels .lost { display:block; }
+    #panel-search:checked  ~ .wrap .panels .search { display:block; }
+    #panel-about:checked   ~ .wrap .panels .about { display:block; }
+    #panel-contact:checked ~ .wrap .panels .contact { display:block; }
+    #panel-login:checked   ~ .wrap .panels .login { display:block; }
+    #panel-register:checked~ .wrap .panels .register { display:block; }
+
+ 
+    #panel-landing:checked  ~ .wrap .side .nav label[for="panel-landing"],
+    #panel-home:checked     ~ .wrap .side .nav label[for="panel-home"],
+    #panel-found:checked    ~ .wrap .side .nav label[for="panel-found"],
+    #panel-lost:checked     ~ .wrap .side .nav label[for="panel-lost"],
+    #panel-search:checked   ~ .wrap .side .nav label[for="panel-search"],
+    #panel-about:checked    ~ .wrap .side .nav label[for="panel-about"],
+    #panel-contact:checked  ~ .wrap .side .nav label[for="panel-contact"],
+    #panel-login:checked    ~ .wrap .side .nav label[for="panel-login"],
+    #panel-register:checked ~ .wrap .side .nav label[for="panel-register"]
+    {
+      background: linear-gradient(90deg, rgba(37,99,235,0.06), rgba(124,58,237,0.03));
+      border: 1px solid rgba(37,99,235,0.12);
+      color: var(--primary);
+      box-shadow: 0 8px 24px rgba(37,99,235,0.06);
+      transform: translateY(-2px);
+    }
+
+   
+    .ico { font-size:16px; width:22px; text-align:center }
+
+   
+    .label-btn {
+      display:inline-block; padding:8px 12px; border-radius:8px; text-decoration:none; cursor:pointer;
+      border:1px solid rgba(15,23,36,0.05); background:var(--card);
+      font-weight:600;
+    }
+    .hint { margin-top:10px; color:var(--muted); font-size:13px; }
+
+  </style>
+</head>
+<body>
+
+  <input class="panel-toggle" id="panel-landing" type="radio" name="panel" checked>
+  <input class="panel-toggle" id="panel-home"    type="radio" name="panel">
+  <input class="panel-toggle" id="panel-found"   type="radio" name="panel">
+  <input class="panel-toggle" id="panel-lost"    type="radio" name="panel">
+  <input class="panel-toggle" id="panel-search"  type="radio" name="panel">
+  <input class="panel-toggle" id="panel-about"   type="radio" name="panel">
+  <input class="panel-toggle" id="panel-contact" type="radio" name="panel">
+  <input class="panel-toggle" id="panel-login"   type="radio" name="panel">
+  <input class="panel-toggle" id="panel-register"type="radio" name="panel">
+
+  <div class="wrap" role="application" aria-label="Seekora single page app">
+
+
+    <aside class="side" aria-hidden="false">
+      <div class="brand" aria-hidden="true">
+        <span class="logo" aria-hidden="true"></span>
+        <div>
+          <h1>Seekora</h1>
+          <p class="muted">Crowd Found & Lost Platform</p>
+        </div>
+      </div>
+
+      <div class="intro">
+        <strong>Quick actions:</strong>
+        <div class="hint">Use buttons below to switch sections — no JavaScript used.</div>
+      </div>
+
+      <nav class="nav" role="navigation" aria-label="Main navigation">
+        <label for="panel-landing" class="nav-item" title="Landing">
+          <span class="ico">🏠</span>
+          <span>Landing</span>
+        </label>
+
+        <label for="panel-home" class="nav-item" title="Home">
+          <span class="ico">🧭</span>
+          <span>Home</span>
+          <small class="hot"> — actions</small>
+        </label>
+
+        <label for="panel-found" class="nav-item" title="Report Found">
+          <span class="ico">🔎</span>
+          <span>Report Item Found</span>
+        </label>
+
+        <label for="panel-lost" class="nav-item" title="Report Lost">
+          <span class="ico">📌</span>
+          <span>Report Item Lost</span>
+        </label>
+
+        <label for="panel-search" class="nav-item" title="Search">
+          <span class="ico">🔍</span>
+          <span>Search Items</span>
+        </label>
+
+        <label for="panel-about" class="nav-item" title="About">
+          <span class="ico">ℹ</span>
+          <span>About Us</span>
+        </label>
+
+        <label for="panel-contact" class="nav-item" title="Contact">
+          <span class="ico">✉</span>
+          <span>Contact</span>
+        </label>
+
+        <label for="panel-login" class="nav-item" title="Login">
+          <span class="ico">🔐</span>
+          <span>Login</span>
+        </label>
+
+        <label for="panel-register" class="nav-item" title="Register">
+          <span class="ico">🆕</span>
+          <span>Register</span>
+        </label>
+      </nav>
+
+      <footer>
+        <div class="muted small">© Seekora — Simple community-driven lost & found</div>
+      </footer>
+    </aside>
+
+    <!-- PANELS AREA -->
+    <main class="panels" role="main">
+      <!-- LANDING -->
+      <section class="panel landing card landing" aria-labelledby="landing-title">
+        <div class="landing-hero">
+          <div class="hero-text">
+            <h1 id="landing-title">Welcome to <span style="color:var(--accent)">Seekora</span></h1>
+            <p class="lead">Crowd Found & Lost Platform</p>
+            <p class="muted">A simple community tool to report found and lost items and help reunite people with their belongings.</p>
+
+            <div class="hero-actions" style="margin-top:12px;">
+              <label for="panel-home" class="btn" style="cursor:pointer">Go to Home</label>
+              <label for="panel-login" class="btn secondary" style="cursor:pointer">Login</label>
+            </div>
+          </div>
+
+          <div style="min-width:160px; text-align:center;">
+            <div style="width:120px; height:120px; border-radius:16px; background:linear-gradient(135deg,var(--primary),var(--accent)); display:inline-block; box-shadow:0 10px 30px rgba(37,99,235,0.08)"></div>
+            <p class="muted small" style="margin-top:10px">Project: <strong>Seekora</strong></p>
+          </div>
+        </div>
+
+        <aside style="margin-top:14px" class="muted small">
+          <strong>How to use (demo):</strong>
+          <ol style="margin-top:8px; padding-left:18px;">
+            <li>Click "Go to Home" to see actions</li>
+            <li>Use "Report Item Found" or "Report Item Lost" to open forms</li>
+            <li>All forms are static (action="#") — backend can be added later</li>
+          </ol>
+        </aside>
+      </section>
+
+      <!-- HOME -->
+      <section class="panel home card home" aria-labelledby="home-title">
+        <h2 id="home-title">Home — Choose an action</h2>
+
+        <div class="two-col" style="margin-top:10px;">
+          <div>
+            <p class="muted">Quick links to report, search or contact. Use the buttons to navigate sections on this page.</p>
+
+            <div style="margin-top:12px; display:flex; flex-direction:column; gap:10px;">
+              <label for="panel-found" class="btn full" style="cursor:pointer">Report Item Found</label>
+              <label for="panel-lost"  class="btn full" style="cursor:pointer">Report Item Lost</label>
+              <label for="panel-search" class="btn full ghost" style="cursor:pointer">Search Items</label>
+              <label for="panel-about" class="btn secondary" style="cursor:pointer">About Us</label>
+              <label for="panel-contact" class="btn secondary" style="cursor:pointer">Contact</label>
+            </div>
+          </div>
+
+          <div>
+            <div class="card" style="padding:14px">
+              <h3 style="margin-bottom:8px">Project info</h3>
+              <p class="muted">Name: <strong>Seekora</strong></p>
+              <p class="muted">Purpose: Community-driven lost & found reporting</p>
+              <p class="muted">Notes: This single-file demo uses only HTML & CSS to switch sections.</p>
+            </div>
+
+            <div class="card" style="margin-top:12px; padding:14px">
+              <h3 style="margin-bottom:8px">Quick search</h3>
+              <form class="form" action="#" method="get">
+                <label>Item name or keyword
+                  <input type="text" name="q" placeholder="e.g. wallet, keys">
+                </label>
+                <div class="actions">
+                  <button class="btn" type="submit">Search</button>
+                  <label for="panel-search" class="label-btn" style="cursor:pointer">Go to Search</label>
+                </div>
+              </form>
+              <p class="muted small" style="margin-top:8px">Note: search is static in this front-end demo.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- FOUND -->
+      <section class="panel found card found" aria-labelledby="found-title">
+        <h2 id="found-title">Report Item Found</h2>
+        <p class="muted small">Fill details about the found item so the owner can contact you.</p>
+
+        <form class="form" action="#" method="post">
+          <label>Item Name
+            <input type="text" name="item_name" required placeholder="e.g. Samsung phone">
+          </label>
+
+          <label>Description
+            <textarea name="description" required placeholder="Describe the item, unique marks..."></textarea>
+          </label>
+
+          <label>Location Found
+            <input type="text" name="location" required placeholder="e.g. Gulberg, Lahore">
+          </label>
+
+          <label>Date Found
+            <input type="date" name="date_found" required>
+          </label>
+
+          <label>Your Contact Info
+            <input type="text" name="contact" required placeholder="Phone or Email">
+          </label>
+
+          <div class="actions">
+            <button class="btn" type="submit">Submit</button>
+            <label for="panel-home" class="btn secondary" style="cursor:pointer">Back</label>
+          </div>
+        </form>
+
+        <p class="muted small" style="margin-top:10px">After submitting (demo) replace form action with server endpoint to store data.</p>
+      </section>
+
+      <!-- LOST -->
+      <section class="panel lost card lost" aria-labelledby="lost-title">
+        <h2 id="lost-title">Report Item Lost</h2>
+        <p class="muted small">Provide details about the lost item; community can contact you if found.</p>
+
+        <form class="form" action="#" method="post">
+          <label>Item Name
+            <input type="text" name="item_name" required placeholder="e.g. Black wallet">
+          </label>
+
+          <label>Description
+            <textarea name="description" required placeholder="Where you lost it, marks, brand..."></textarea>
+          </label>
+
+          <label>Location Lost
+            <input type="text" name="location" required placeholder="e.g. Market name or neighbourhood">
+          </label>
+
+          <label>Date Lost
+            <input type="date" name="date_lost" required>
+          </label>
+
+          <label>Your Contact Info
+            <input type="text" name="contact" required placeholder="Phone or Email">
+          </label>
+
+          <div class="actions">
+            <button class="btn" type="submit">Submit</button>
+            <label for="panel-home" class="btn secondary" style="cursor:pointer">Back</label>
+          </div>
+        </form>
+
+        <p class="muted small" style="margin-top:10px">Tip: include a phone number for quicker contact.</p>
+      </section>
+
+      <!-- SEARCH -->
+      <section class="panel search card search" aria-labelledby="search-title">
+        <h2 id="search-title">Search Items</h2>
+        <p class="muted small">Search by name or location (static demo).</p>
+
+        <form class="form" action="#" method="get">
+          <label>Search by item name or description
+            <input type="text" name="q" placeholder="e.g. wallet, keys">
+          </label>
+
+          <label>Location (optional)
+            <input type="text" name="location" placeholder="City or place">
+          </label>
+
+          <div class="actions">
+            <button class="btn" type="submit">Search</button>
+            <label for="panel-home" class="label-btn" style="cursor:pointer">Back</label>
+          </div>
+        </form>
+
+        <div class="results card" style="margin-top:12px; padding:12px">
+          <p class="muted">Search results not implemented — this is a front-end only demo. Replace with server search to show real listings.</p>
+        </div>
+      </section>
+
+      <!-- ABOUT -->
+      <section class="panel about card about" aria-labelledby="about-title">
+        <h2 id="about-title">About Seekora</h2>
+        <p>Seekora is a simple, community-driven platform that helps people report found items and search for lost belongings. It aims to speed up reunification by providing clear reports and contact info.</p>
